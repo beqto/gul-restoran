@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gül Restorant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #222;
+      background-color: #faf7f2;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(20, 20, 20, 0.95);
+      color: #f7f3ea;
+      backdrop-filter: blur(8px);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    header.scrolled {
+      background: rgba(10, 10, 10, 0.97);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .nav-links a {
+      position: relative;
+      padding-bottom: 4px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0;
+      height: 2px;
+      background: #f4c06a;
+      transition: width 0.25s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-links a:hover {
+      color: #f4c06a;
+    }
+
+    .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px 40px;
+      background: radial-gradient(circle at top, #4d2b1b, #120b08);
+      color: #fdf5e6;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244, 192, 106, 0.4), transparent);
+      top: -120px;
+      right: -80px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 900px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 800px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.4);
+      font-size: 12px;
+      margin-bottom: 14px;
+      animation: fadeDown 0.7s ease-out both;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #5cff9e;
+      box-shadow: 0 0 8px rgba(92, 255, 158, 0.8);
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 44px);
+      margin-bottom: 14px;
+      animation: fadeUp 0.8s ease-out 0.05s both;
+    }
+
+    .hero-title span {
+      color: #f4c06a;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      max-width: 430px;
+      opacity: 0.9;
+      margin-bottom: 22px;
+      animation: fadeUp 0.8s ease-out 0.1s both;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 10px;
+      animation: fadeUp 0.8s ease-out 0.15s both;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease,
+        color 0.18s ease, opacity 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #f4c06a, #ff9b3d);
+      color: #1c130b;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.55);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #fdf5e6;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero-meta {
+      font-size: 12px;
+      opacity: 0.85;
+      animation: fadeUp 0.8s ease-out 0.2s both;
+    }
+
+    .hero-image {
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background-image: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0.7)
+        ),
+        url("https://images.pexels.com/photos/941869/pexels-photo-941869.jpeg?auto=compress&cs=tinysrgb&w=1200");
+      background-size: cover;
+      background-position: center;
+      min-height: 220px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+      animation: fadeLeft 0.8s ease-out 0.15s both;
+    }
+
+    .hero-image::after {
+      content: "1974'ten beri lezzet durağınız.";
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fdf5e6;
+    }
+
+    .hero-image::before {
+      content: "";
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      background: radial-gradient(circle at 0% 0%, rgba(244, 192, 106, 0.3), transparent);
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      transform: translate3d(-20%, -20%, 0);
+      animation: glowMove 8s linear infinite;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    section {
+      padding: 32px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 16px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 40px;
+      height: 2px;
+      background: linear-gradient(90deg, #f4c06a, transparent);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    @media (max-width: 800px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .muted {
+      color: #6c6962;
+      font-size: 14px;
+    }
+
+    .fact-card {
+      border-radius: 18px;
+      padding: 18px 20px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .fact-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    .fact-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #a28f6c;
+      margin-bottom: 4px;
+    }
+
+    .fact-value {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    /* Küçük menü tanıtımı */
+    .mini-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .mini-menu-card {
+      padding: 16px 16px 18px;
+      border-radius: 16px;
+      background: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .mini-menu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .menu-title {
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .menu-price {
+      color: #b46a1b;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .menu-desc {
+      font-size: 14px;
+      color: #6b6861;
+    }
+
+    /* Foto galeri */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .gallery-item {
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      background: #ddd;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transform-origin: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.02);
+      transition: transform 0.35s ease;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.16);
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .gallery-caption {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fffaf0;
+      font-size: 13px;
+      padding: 5px 9px;
+      border-radius: 999px;
+    }
+
+    .map-wrapper {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
+      background: #ddd;
+      min-height: 260px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .map-wrapper:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.14);
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #555;
+      background: repeating-linear-gradient(
+          45deg,
+          #f3eee4,
+          #f3eee4 10px,
+          #e7dfd2 10px,
+          #e7dfd2 20px
+        );
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    footer {
+      text-align: center;
+      padding: 18px 20px 26px;
+      font-size: 13px;
+      color: #848077;
+    }
+
+    /* Online rezervasyon butonu (WhatsApp) */
+    .floating-reserve {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 20;
+      background: linear-gradient(135deg, #25d366, #1ebe5d);
+      color: #fff;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      border: none;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    .floating-reserve:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55);
+    }
+
+    .floating-reserve span.icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.12);
+      display: inline-block;
+      position: relative;
+    }
+
+    .floating-reserve span.icon::after {
+      content: "☎";
+      position: absolute;
+      inset: 0;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Scroll reveal animasyonu */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeLeft {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes glowMove {
+      0% { transform: translate3d(-20%, -20%, 0); }
+      50% { transform: translate3d(0%, 0%, 0); }
+      100% { transform: translate3d(-20%, -20%, 0); }
+    }
+  </style>
+</head>
+<body>
+  <header id="top-header">
+    <div class="nav">
+      <div class="logo">GÜL RESTORANT</div>
+      <nav class="nav-links">
+        <a href="#hakkimizda">Hakkımızda</a>
+        <a href="#kurulus">Kuruluş</a>
+        <a href="#galeri">Galeri</a>
+        <a href="menu.html">Menü (Fiyatlar)</a>
+        <a href="#konum">Konum</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span>1974'ten beri mahallenizin lezzet adresi</span>
+        </div>
+        <h1 class="hero-title">Gül <span>Restorant</span></h1>
+        <p class="hero-subtitle">
+          Yıldıztabya’nın sevilen klasiklerinden; sıcak ortamı, tanıdık lezzetleri ve
+          aile sıcaklığındaki samimiyetiyle yıllardır aynı adreste hizmet veriyoruz.
+        </p>
+        <div class="hero-buttons">
+          <button
+            class="btn-primary"
+            onclick="window.location.href='menu.html';"
+          >
+            Menüyü Fiyatlarıyla Gör
+          </button>
+          <button
+            class="btn-ghost"
+            onclick="document.getElementById('konum').scrollIntoView({behavior: 'smooth'});"
+          >
+            Konumu Aç
+          </button>
+        </div>
+        <div class="hero-meta">
+          Her gün 12:00 – 23:30 • Paket servis ve gel‑al hizmeti
+        </div>
+      </div>
+
+      <div class="hero-image"></div>
+    </div>
+  </section>
+
+  <main>
+    <!-- Hakkımızda -->
+    <section id="hakkimizda" class="reveal">
+      <h2 class="section-title">Restoran Hakkında</h2>
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <p>
+            Gül Restorant, 1974 yılından bu yana Yıldıztabya mahallesinde; ev
+            yemeklerinin sıcaklığını ve esnaf lokantasının samimiyetini bir araya
+            getiriyor. Yıllardır değişmeyen lezzetlerimiz, kuşaktan kuşağa aktarılan
+            tariflerimiz ve tanıdık yüzlerimizle misafirlerimizi ağırlıyoruz.
+          </p>
+          <p style="margin-top: 10px;">
+            Öğle aralarında hızlı ve doyurucu bir yemek, akşamları ise ailenizle
+            sakin bir sofra kurmak istediğinizde kapımız size her zaman açık.
+          </p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-label">Öne çıkanlar</div>
+          <div class="fact-value">Ev yemekleri & ızgara çeşitleri</div>
+          <p class="muted">
+            Günlük taze hazırlanan yemekler, sıcak çorba, klasik tatlılar ve mahalle
+            kültürünü yaşatan samimi bir ortam.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Kuruluş -->
+    <section id="kurulus" class="reveal">
+      <h2 class="section-title">Ne Zaman Kurulduk?</h2>
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <p>
+            Gül Restorant, 1974 yılında mütevazı bir aile işletmesi olarak kapılarını
+            açtı. O günden bugüne aynı semtte, aynı adreste; lezzetini ve
+            misafirperverliğini koruyarak yoluna devam ediyor.
+          </p>
+          <p style="margin-top: 10px;">
+            Kırk yılı aşkın süredir yüzlerce aileyi aynı masada buluşturduk; nice
+            dostluklara, kutlamalara ve anılara ev sahipliği yaptık.
+          </p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-label">Kuruluş yılı</div>
+          <div class="fact-value">1974</div>
+          <p class="muted">
+            <strong>“Eski usul, değişmeyen lezzet”</strong> anlayışıyla, yılların
+            tecrübesini bugün de aynı özenle sürdürüyoruz.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Küçük menü tanıtımı -->
+    <section class="reveal">
+      <h2 class="section-title">Menüden Öne Çıkanlar</h2>
+      <p class="muted" style="margin-top: 10px;">
+        Tüm menüyü fiyatlarıyla birlikte görmek için üst menüden veya aşağıdaki
+        butondan <strong>Menü (Fiyatlar)</strong> sayfasını açabilirsin.
+      </p>
+
+      <div class="mini-menu-grid">
+        <div class="mini-menu-card">
+          <div class="menu-title">
+            <span>Günün Tencere Yemeği</span>
+            <span class="menu-price">Sorunuz</span>
+          </div>
+          <p class="menu-desc">
+            Her gün farklı, taze ve doyurucu ev yemekleri.
+          </p>
+        </div>
+        <div class="mini-menu-card">
+          <div class="menu-title">
+            <span>Izgara Köfte Tabağı</span>
+            <span class="menu-price">Sorunuz</span>
+          </div>
+          <p class="menu-desc">
+            Pilav, patates ve salata eşliğinde klasik lezzet.
+          </p>
+        </div>
+        <div class="mini-menu-card">
+          <div class="menu-title">
+            <span>Mercimek Çorbası</span>
+            <span class="menu-price">Sorunuz</span>
+          </div>
+          <p class="menu-desc">
+            Sıcacık, kıvamı yerinde mercimek çorbası.
+          </p>
+        </div>
+      </div>
+
+      <button
+        class="btn-primary"
+        style="margin-top: 18px;"
+        onclick="window.location.href='menu.html';"
+      >
+        Tüm Menüyü Fiyatlarıyla Gör
+      </button>
+    </section>
+
+    <!-- Galeri -->
+    <section id="galeri" class="reveal">
+      <h2 class="section-title">Yemeklerden Kareler</h2>
+      <p class="muted" style="margin-top: 10px;">
+        Gül Restorant mutfağından birkaç lezzet: ızgaralar, tencere yemekleri ve
+        klasik tatlılar.
+      </p>
+
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img
+            src="https://images.pexels.com/photos/4106483/pexels-photo-4106483.jpeg?auto=compress&cs=tinysrgb&w=800"
+            alt="Izgara köfte tabağı"
+          />
+          <div class="gallery-caption">Izgara köfte & garnitür</div>
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://images.pexels.com/photos/6287528/pexels-photo-6287528.jpeg?auto=compress&cs=tinysrgb&w=800"
+            alt="Geleneksel tencere yemeği"
+          />
+          <div class="gallery-caption">Geleneksel tencere yemekleri</div>
+        </div>
+        <div class="gallery-item">
+          <img
+            src="https://images.pexels.com/photos/4109990/pexels-photo-4109990.jpeg?auto=compress&cs=tinysrgb&w=800"
+            alt="Tatlılar ve çay"
+          />
+          <div class="gallery-caption">Tatlılar & çay keyfi</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Konum -->
+    <section id="konum" class="reveal">
+      <h2 class="section-title">Konum</h2>
+      <div class="two-col" style="margin-top: 14px;">
+        <div>
+          <p>
+            Gül Restorant, Yıldıztabya mahallesinde, kolay bulunur bir noktada yer alır.
+            Mahalle sakinlerinin yıllardır bildiği bu köşe başında sizi ağırlamaktan
+            mutluluk duyarız.
+          </p>
+          <p class="muted" style="margin-top: 10px;">
+            <strong>Adres:</strong><br />
+            Yıldıztabya Mahallesi Köşegen Sokak No: 192
+          </p>
+          <p class="muted" style="margin-top: 10px;">
+            <strong>Rezervasyon / Sipariş:</strong><br />
+            0545 351 80 31
+          </p>
+          <p class="muted" style="margin-top: 10px;">
+            Dilersen Google Haritalar linkini de buraya ekleyerek müşterilerine kolay
+            yol tarifi sunabilirsin.
+          </p>
+        </div>
+        <div class="map-wrapper">
+          <div class="map-placeholder">
+            <div>
+              <strong>Buraya harita gelecek.</strong><br /><br />
+              Google Haritalar’da “Gül Restorant, Yıldıztabya Mahallesi Köşegen Sokak
+              No:192” konumunu bulup,<br />
+              <em>"Haritayı paylaştır &gt; Haritayı yerleştir"</em> kısmındaki
+              iframe kodunu<br />
+              bu kutunun yerine yapıştırabilirsin.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Gül Restorant — Tüm hakları saklıdır.
+  </footer>
+
+  <!-- Online rezervasyon (WhatsApp) -->
+  <button
+    class="floating-reserve"
+    onclick="window.open('https://wa.me/905453518031?text=Merhaba%2C%20G%C3%BCl%20Restorant%27tan%20rezervasyon%20yapt%C4%B1rmak%20istiyorum.', '_blank');"
+  >
+    <span class="icon"></span>
+    <span>Online Rezervasyon</span>
+  </button>
+
+  <script>
+    // Yılı otomatik yaz
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Header scroll efekti
+    const header = document.getElementById("top-header");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 40) {
+        header.classList.add("scrolled");
+      } else {
+        header.classList.remove("scrolled");
+      }
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    revealEls.forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
