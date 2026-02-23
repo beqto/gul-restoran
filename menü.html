@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gül Restorant Menü</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background-color: #111;
+      color: #fdf5e6;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .menu-wrapper {
+      max-width: 600px;
+      width: 100%;
+      background: #1b1410;
+      border-radius: 20px;
+      padding: 24px 22px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    h1 {
+      font-size: 22px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .item {
+      font-size: 15px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .name {
+      white-space: nowrap;
+    }
+
+    .dots {
+      flex: 1;
+      border-bottom: 1px dotted rgba(255, 255, 255, 0.35);
+      margin: 0 6px;
+    }
+
+    .price {
+      white-space: nowrap;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #c7b89e;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .back {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .back a {
+      font-size: 13px;
+      color: #f4c06a;
+      text-decoration: none;
+    }
+
+    .back a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu-wrapper">
+    <h1>Gül Restorant Menü</h1>
+
+    <div id="menu-items">
+      <!-- JS buraya satırları yazacak -->
+    </div>
+
+    <div class="note">
+      Fiyatlar yönetim panelinden güncellenebilir.
+    </div>
+
+    <div class="back">
+      <a href="index.html">Ana sayfaya geri dön</a>
+    </div>
+  </div>
+
+  <script>
+    // Varsayılan 3 ürün
+    const defaultItems = [
+      { name: "Mercimek çorbası", price: "200 TL" },
+      { name: "Izgara tavuk", price: "300 TL" },
+      { name: "Köfte porsiyon", price: "450 TL" },
+    ];
+
+    function renderMenu(items) {
+      const root = document.getElementById("menu-items");
+      root.innerHTML = "";
+      items.forEach((it) => {
+        const row = document.createElement("div");
+        row.className = "item";
+        row.innerHTML = `
+          <span class="name">${it.name}</span>
+          <span class="dots"></span>
+          <span class="price">${it.price}</span>
+        `;
+        root.appendChild(row);
+      });
+    }
+
+    let items = defaultItems;
+
+    // admin.html'deki ayarları (localStorage) oku
+    try {
+      const raw = localStorage.getItem("gulRestorantConfig");
+      if (raw) {
+        const cfg = JSON.parse(raw);
+        items = [
+          {
+            name: cfg.m1name || defaultItems[0].name,
+            price: cfg.m1price || defaultItems[0].price,
+          },
+          {
+            name: cfg.m2name || defaultItems[1].name,
+            price: cfg.m2price || defaultItems[1].price,
+          },
+          {
+            name: cfg.m3name || defaultItems[2].name,
+            price: cfg.m3price || defaultItems[2].price,
+          },
+        ];
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    renderMenu(items);
+  </script>
+</body>
+</html>

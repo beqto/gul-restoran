@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gül Restorant Yönetim Paneli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #111;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .box {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #1c1511;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    h1 { font-size: 20px; margin-bottom: 14px; }
+    label { font-size: 13px; display: block; margin-top: 10px; }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #120d0a;
+      color: #f5f5f5;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+    textarea { min-height: 60px; resize: vertical; }
+    button {
+      margin-top: 14px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      background: linear-gradient(135deg,#f4c06a,#ff9b3d);
+      color: #1c130b;
+    }
+    .small { font-size: 11px; color: #ccc; margin-top: 4px; }
+    .ok { color: #7CFFB2; font-size: 13px; margin-top: 8px; }
+    .error { color: #ff6b6b; font-size: 13px; margin-top: 8px; }
+    .password-box {
+      max-width: 320px;
+      margin: 80px auto 0;
+      background: #1c1511;
+      padding: 18px 18px 20px;
+      border-radius: 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+  </style>
+</head>
+<body>
+  <!-- Şifre ekranı -->
+  <div id="pw-screen" class="password-box">
+    <h2 style="margin-top:0;font-size:18px;">Yönetim Paneli Girişi</h2>
+    <label>Şifre</label>
+    <input type="password" id="pw-input" placeholder="Şifreni yaz" />
+    <button onclick="checkPassword()">Giriş Yap</button>
+    <div id="pw-msg" class="error"></div>
+    <div class="small">Bu sayfanın adresini ve şifreyi sadece sen bil.</div>
+  </div>
+
+  <!-- Yönetim formu -->
+  <div id="panel" class="box" style="display:none;">
+    <h1>Gül Restorant Yönetim Paneli</h1>
+    <p class="small">
+      Buradaki bilgileri kaydettiğinde, <code>index.html</code> ve <code>menu.html</code>
+      sayfaları otomatik olarak bu verileri kullanacak (tarayıcı aynı bilgisayarda olmalı).
+    </p>
+
+    <!-- Ana sayfa hero yazıları -->
+    <h3>1) Ana Sayfa Başlık / Açıklama</h3>
+    <label>Başlık (ör: Gül Restorant)</label>
+    <input type="text" id="heroTitle" />
+
+    <label>Açıklama (hero yazısı)</label>
+    <textarea id="heroSubtitle"></textarea>
+
+    <!-- Galeri resimleri -->
+    <h3 style="margin-top:18px;">2) Galeri Resimleri (URL)</h3>
+    <label>Foto 1 URL</label>
+    <input type="text" id="img1" />
+    <label>Foto 2 URL</label>
+    <input type="text" id="img2" />
+    <label>Foto 3 URL</label>
+    <input type="text" id="img3" />
+    <div class="small">
+      İstersen Pexels/Unsplash gibi sitelerden görsel linki koyabilirsin.
+    </div>
+
+    <!-- Menü kalemleri -->
+    <h3 style="margin-top:18px;">3) Menü Kalemleri (menu.html)</h3>
+    <label>1. Ürün adı</label>
+    <input type="text" id="m1name" />
+    <label>1. Ürün fiyatı</label>
+    <input type="text" id="m1price" />
+
+    <label>2. Ürün adı</label>
+    <input type="text" id="m2name" />
+    <label>2. Ürün fiyatı</label>
+    <input type="text" id="m2price" />
+
+    <label>3. Ürün adı</label>
+    <input type="text" id="m3name" />
+    <label>3. Ürün fiyatı</label>
+    <input type="text" id="m3price" />
+
+    <button onclick="saveConfig()">Kaydet</button>
+    <div id="save-msg" class="ok"></div>
+  </div>
+
+  <script>
+    // Çok basit şifre (istersen değiştir)
+    const ADMIN_PASSWORD = "gulsecret123";
+
+    function checkPassword() {
+      const pw = document.getElementById("pw-input").value;
+      const msg = document.getElementById("pw-msg");
+      if (pw === ADMIN_PASSWORD) {
+        document.getElementById("pw-screen").style.display = "none";
+        document.getElementById("panel").style.display = "block";
+        loadConfig();
+      } else {
+        msg.textContent = "Şifre hatalı.";
+      }
+    }
+
+    function loadConfig() {
+      const raw = localStorage.getItem("gulRestorantConfig");
+      if (!raw) return;
+      try {
+        const cfg = JSON.parse(raw);
+        // Hero
+        document.getElementById("heroTitle").value = cfg.heroTitle || "";
+        document.getElementById("heroSubtitle").value = cfg.heroSubtitle || "";
+        // Galeri
+        document.getElementById("img1").value = cfg.img1 || "";
+        document.getElementById("img2").value = cfg.img2 || "";
+        document.getElementById("img3").value = cfg.img3 || "";
+        // Menü
+        document.getElementById("m1name").value = cfg.m1name || "";
+        document.getElementById("m1price").value = cfg.m1price || "";
+        document.getElementById("m2name").value = cfg.m2name || "";
+        document.getElementById("m2price").value = cfg.m2price || "";
+        document.getElementById("m3name").value = cfg.m3name || "";
+        document.getElementById("m3price").value = cfg.m3price || "";
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function saveConfig() {
+      const cfg = {
+        heroTitle: document.getElementById("heroTitle").value,
+        heroSubtitle: document.getElementById("heroSubtitle").value,
+        img1: document.getElementById("img1").value,
+        img2: document.getElementById("img2").value,
+        img3: document.getElementById("img3").value,
+        m1name: document.getElementById("m1name").value,
+        m1price: document.getElementById("m1price").value,
+        m2name: document.getElementById("m2name").value,
+        m2price: document.getElementById("m2price").value,
+        m3name: document.getElementById("m3name").value,
+        m3price: document.getElementById("m3price").value,
+      };
+      localStorage.setItem("gulRestorantConfig", JSON.stringify(cfg));
+      document.getElementById("save-msg").textContent =
+        "Kaydedildi. index.html ve menu.html sayfalarını yenileyip kontrol et.";
+      setTimeout(() => (document.getElementById("save-msg").textContent = ""), 3500);
+    }
+  </script>
+</body>
+</html>
